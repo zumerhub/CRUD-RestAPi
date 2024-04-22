@@ -1,0 +1,68 @@
+const fs = require('fs');
+const Users = require('../MOCK_DATA.json');
+
+// GET ALL USERS
+async function handlerGetAllUsers(req, res) {
+    if (!Users) 
+    return res.status(404).json({ msg: 'User not found' });
+    // console.log(req.headers);
+    return res.json(Users);
+}
+// GET USER ID 
+async function handlerGetUserById(req, res) {
+    const id = Number(req.params.id);
+    const user = await Users.find((user) => user.id === id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    return res.json(user);
+}
+
+// CREATE USER
+async function hanleCreateNewUser(req, res) {
+    const body = req.body;
+    // console.log(body);
+    Users.push({ ...body, id: Users.length + 1 });    // push the new user to the list
+    fs.writeFile("../MOCK_DATA.json", JSON.stringify(Users) + "\n", (err, data) => {       // write on JSON FILE
+        return res.status(200).json({ status: "pending....", id: Users.length })
+    });
+}
+
+// UPDATE USER
+async function hanlePatchUsersId(req, res) {
+    
+        return res.json({ status: "pending...." })
+    }
+
+// DELETE USER
+async function hanleDeleteUsersId(req, res) {
+
+    return res.json({ status: "pending...." })
+
+}
+
+
+module.exports = {
+    handlerGetAllUsers,
+    handlerGetUserById,
+    hanleCreateNewUser,
+    hanlePatchUsersId,
+    hanleDeleteUsersId
+}
+
+
+/// MIDDLEWARES
+const fs = require("fs");
+
+function logReqRes(req, res, next) {
+    fs.appendFile(
+        "log.txt", 
+        `${new Date().toISOString()} - ${req.ip} ${req.method} ${req.url}\n`,
+         (err, data) => {
+        next();
+    });
+}
+
+module.exports = {
+    logReqRes,
+};
+
+  'mongodb+srv://adekunlesamuel:Sam_1995@cluster0.mqe9eo8.mongodb.net/CRUD-API' 
